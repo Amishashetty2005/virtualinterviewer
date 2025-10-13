@@ -1,4 +1,4 @@
-// Top-level build file
+// Correct project-level build.gradle.kts
 plugins {
     id("com.android.application") version "8.5.0" apply false
     id("org.jetbrains.kotlin.android") version "1.9.23" apply false
