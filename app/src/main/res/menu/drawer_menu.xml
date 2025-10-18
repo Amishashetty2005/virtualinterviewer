@@ -3,28 +3,27 @@
 
     <item
         android:id="@+id/nav_profile"
-        android:icon="@drawable/ic_person"
-        android:title="Profile" />
+        android:title="Profile"
+        android:icon="@drawable/ic_person" />
 
     <item
         android:id="@+id/nav_interview"
-        android:icon="@drawable/ic_interview"
-        android:title="Interview" />
+        android:title="Interview"
+        android:icon="@drawable/ic_interview" />
 
     <item
         android:id="@+id/nav_status"
-        android:icon="@drawable/ic_status"
-        android:title="Status" />
+        android:title="Status"
+        android:icon="@drawable/ic_status" />
 
     <item
         android:id="@+id/nav_settings"
-        android:icon="@drawable/ic_settings"
-        android:title="Settings" />
+        android:title="Settings"
+        android:icon="@drawable/ic_settings" />
 
     <item
         android:id="@+id/nav_logout"
-        android:icon="@drawable/ic_logout"
-        android:title="Logout" />
+        android:title="Logout"
+        android:icon="@drawable/ic_logout" />
 
 </menu>
-

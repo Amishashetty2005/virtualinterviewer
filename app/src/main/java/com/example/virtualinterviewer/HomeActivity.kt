@@ -1,105 +1,93 @@
 package com.example.virtualinterviewer
 
 import android.content.Intent
-import android.content.SharedPreferences
 import android.os.Bundle
-import android.view.MenuItem
+import android.widget.Button
 import android.widget.ImageView
 import android.widget.TextView
-import androidx.appcompat.app.ActionBarDrawerToggle
 import androidx.appcompat.app.AppCompatActivity
+import androidx.appcompat.widget.Toolbar
+import androidx.core.view.GravityCompat
 import androidx.drawerlayout.widget.DrawerLayout
 import com.google.android.material.navigation.NavigationView
-import android.widget.Button
+import com.google.firebase.auth.FirebaseAuth
 
 class HomeActivity : AppCompatActivity() {
 
     private lateinit var drawerLayout: DrawerLayout
-    private lateinit var navView: NavigationView
-    private lateinit var toggle: ActionBarDrawerToggle
+    private lateinit var navigationView: NavigationView
+    private lateinit var btnStartInterview: Button
 
-    // Drawer header views
+    // Profile info in drawer header
     private lateinit var tvDrawerName: TextView
     private lateinit var tvDrawerEmail: TextView
     private lateinit var ivEditProfile: ImageView
 
-    private lateinit var btnStartInterview: Button
-
-    private lateinit var sharedPreferences: SharedPreferences
     private lateinit var currentUserEmail: String
+    private lateinit var mAuth: FirebaseAuth
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        setContentView(R.layout.activity_home) // Keep your home XML
+        setContentView(R.layout.activity_home)
+
+        mAuth = FirebaseAuth.getInstance()
+        currentUserEmail = mAuth.currentUser?.email ?: "" // Get logged-in user's email
 
         drawerLayout = findViewById(R.id.drawer_layout)
-        navView = findViewById(R.id.navigation_view)
+        navigationView = findViewById(R.id.navigation_view)
         btnStartInterview = findViewById(R.id.btn_start_interview)
 
-        // SharedPreferences
-        sharedPreferences = getSharedPreferences("UserPrefs", MODE_PRIVATE)
+        // Toolbar setup
+        val toolbar: Toolbar = findViewById(R.id.toolbar)
+        setSupportActionBar(toolbar)
+        toolbar.setNavigationOnClickListener {
+            drawerLayout.openDrawer(GravityCompat.START)
+        }
 
-        // Get logged-in email from intent
-        currentUserEmail = intent.getStringExtra("email") ?: ""
+        // Get drawer header views
+        val headerView = navigationView.getHeaderView(0)
+        tvDrawerName = headerView.findViewById(R.id.tvProfileName)
+        tvDrawerEmail = headerView.findViewById(R.id.tvProfileEmail)
+        ivEditProfile = headerView.findViewById(R.id.editProfileIcon)
 
-        // Setup drawer toggle
-        toggle = ActionBarDrawerToggle(
-            this, drawerLayout, R.string.navigation_drawer_open, R.string.navigation_drawer_close
-        )
-        drawerLayout.addDrawerListener(toggle)
-        toggle.syncState()
-        supportActionBar?.setDisplayHomeAsUpEnabled(true)
+        // Load profile info for current user
+        loadProfile()
 
-        // Header views
-        val header = navView.getHeaderView(0)
-        tvDrawerName = header.findViewById(R.id.tvDrawerName)
-        tvDrawerEmail = header.findViewById(R.id.tvDrawerEmail)
-        ivEditProfile = header.findViewById(R.id.ivEditProfile)
-
-        loadUserProfile()
-
-        // Open Edit Profile Activity
+        // Edit Profile click
         ivEditProfile.setOnClickListener {
             val intent = Intent(this, EditProfileActivity::class.java)
-            intent.putExtra("email", currentUserEmail)
+            intent.putExtra("current_user_email", currentUserEmail)
             startActivity(intent)
         }
 
-        // Drawer menu item clicks
-        navView.setNavigationItemSelectedListener { menuItem ->
-            when (menuItem.itemId) {
-                R.id.nav_interview -> { /* handle interview */ true }
-                R.id.nav_status -> { /* handle status */ true }
-                R.id.nav_settings -> { /* handle settings */ true }
-                R.id.nav_logout -> {
-                    finish() // logout
-                    true
-                }
-                else -> false
-            }
-        }
-
-        // Start Interview Button
+        // Start Interview button click
         btnStartInterview.setOnClickListener {
-            // start interview activity
+            // Handle start interview
         }
-    }
 
-    private fun loadUserProfile() {
-        val name = sharedPreferences.getString("${currentUserEmail}_name", "")
-        val email = sharedPreferences.getString("${currentUserEmail}_email", currentUserEmail)
-
-        tvDrawerName.text = name ?: ""
-        tvDrawerEmail.text = email ?: ""
+        // Logout menu item
+        navigationView.setNavigationItemSelectedListener { menuItem ->
+            when(menuItem.itemId) {
+                R.id.nav_logout -> {
+                    mAuth.signOut()
+                    startActivity(Intent(this, LoginActivity::class.java))
+                    finish()
+                }
+                else -> {}
+            }
+            drawerLayout.closeDrawer(GravityCompat.START)
+            true
+        }
     }
 
     override fun onResume() {
         super.onResume()
-        loadUserProfile()
+        loadProfile() // Update profile info after returning from EditProfileActivity
     }
 
-    override fun onOptionsItemSelected(item: MenuItem): Boolean {
-        if (toggle.onOptionsItemSelected(item)) return true
-        return super.onOptionsItemSelected(item)
+    private fun loadProfile() {
+        val prefs = getSharedPreferences("user_profiles", MODE_PRIVATE)
+        tvDrawerName.text = prefs.getString("${currentUserEmail}_name", "")
+        tvDrawerEmail.text = prefs.getString("${currentUserEmail}_email", "")
     }
 }

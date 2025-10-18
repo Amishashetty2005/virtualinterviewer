@@ -1,6 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:app="http://schemas.android.com/apk/res-auto"
     android:layout_width="match_parent"
     android:layout_height="160dp"
     android:orientation="horizontal"
@@ -8,50 +7,49 @@
     android:gravity="center_vertical"
     android:background="@color/primaryColor">
 
-    <!-- Profile Circle -->
+    <!-- Profile Image -->
     <ImageView
-        android:id="@+id/ivProfilePic"
+        android:id="@+id/imgProfile"
         android:layout_width="60dp"
         android:layout_height="60dp"
         android:src="@drawable/ic_person"
-        android:contentDescription="@string/profile_image"
         android:background="@drawable/profile_circle_bg"
-        android:padding="8dp" />
+        android:padding="4dp"
+        android:contentDescription="@string/profile_image" />
 
     <!-- Name & Email -->
     <LinearLayout
         android:layout_width="0dp"
         android:layout_height="wrap_content"
+        android:layout_marginStart="16dp"
         android:layout_weight="1"
-        android:orientation="vertical"
-        android:paddingStart="12dp">
+        android:orientation="vertical">
 
         <TextView
-            android:id="@+id/tvDrawerName"
+            android:id="@+id/tvProfileName"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="@string/profile_name"
-            android:textColor="@android:color/white"
+            android:text="User Name"
             android:textSize="18sp"
+            android:textColor="@color/white"
             android:textStyle="bold" />
 
         <TextView
-            android:id="@+id/tvDrawerEmail"
+            android:id="@+id/tvProfileEmail"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="user@email.com"
-            android:textColor="@android:color/white"
-            android:textSize="14sp" />
+            android:text="user@example.com"
+            android:textSize="14sp"
+            android:textColor="@color/white" />
     </LinearLayout>
 
     <!-- Edit Icon -->
     <ImageView
-        android:id="@+id/ivEditProfile"
+        android:id="@+id/editProfileIcon"
         android:layout_width="36dp"
         android:layout_height="36dp"
         android:src="@drawable/ic_edit"
         android:contentDescription="@string/edit_profile"
-        android:padding="4dp"
-        app:tint="@android:color/white" />
+        android:layout_gravity="center_vertical" />
 
 </LinearLayout>
