@@ -1,0 +1,39 @@
+<?xml version="1.0" encoding="utf-8"?>
+<manifest xmlns:android="http://schemas.android.com/apk/res/android"
+    package="com.example.virtualinterviewer">
+
+    <!-- Internet permission for OpenAI API -->
+    <uses-permission android:name="android.permission.INTERNET" />
+
+    <application
+        android:allowBackup="true"
+        android:label="Virtual Interviewer"
+        android:theme="@style/AppTheme"
+        android:supportsRtl="true">
+
+        <!-- Authentication -->
+        <activity android:name=".LoginActivity" android:exported="false" />
+        <activity android:name=".SignupActivity" android:exported="true">
+            <intent-filter>
+                <action android:name="android.intent.action.MAIN" />
+                <category android:name="android.intent.category.LAUNCHER" />
+            </intent-filter>
+        </activity>
+
+        <!-- Main dashboard -->
+        <activity android:name=".HomeActivity" android:exported="false" />
+
+        <!-- Profile management -->
+        <activity android:name=".SettingsActivity" android:exported="false" />
+        <activity android:name=".EditProfileActivity" android:exported="false" />
+
+        <!-- AI Interview flow -->
+        <activity android:name=".InterviewActivity" android:exported="false" />
+        <activity android:name=".IntroductionActivity" android:exported="false" />
+        <activity android:name=".AptitudeMCQActivity" android:exported="false" />
+        <activity android:name=".RoleMCQActivity" android:exported="false" />
+        <activity android:name=".LongAnswerActivity" android:exported="false" />
+        <activity android:name=".ResultActivity" android:exported="false" />
+    </application>
+
+</manifest>

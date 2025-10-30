@@ -1,0 +1,29 @@
+{
+  "project_info": {
+    "project_number": "288567068311",
+    "project_id": "virtual-interviewer-ff1ca",
+    "storage_bucket": "virtual-interviewer-ff1ca.firebasestorage.app"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:288567068311:android:10f01c2c41ff330d048bd2",
+        "android_client_info": {
+          "package_name": "com.example.virtualinterviewer"
+        }
+      },
+      "oauth_client": [],
+      "api_key": [
+        {
+          "current_key": "AIzaSyD2Yvc_-3te3hVqKSOqlgOz2NGURBWLu7k"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": []
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
