@@ -1,13 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <shape xmlns:android="http://schemas.android.com/apk/res/android"
     android:shape="oval">
-
-    <!-- Fill color inside the circle -->
-    <solid android:color="#FFFFFF"/>
-
-    <!-- Border / stroke around the circle -->
-    <stroke
-        android:width="2dp"
-        android:color="#6200EE"/>
-
+    <solid android:color="#D1C4E9" /> <!-- Light purple background -->
+    <size android:width="72dp" android:height="72dp"/>
 </shape>

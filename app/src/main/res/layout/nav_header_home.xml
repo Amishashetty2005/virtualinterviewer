@@ -1,57 +1,46 @@
 <?xml version="1.0" encoding="utf-8"?>
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:orientation="vertical"
     android:layout_width="match_parent"
-    android:layout_height="160dp"
-    android:orientation="horizontal"
-    android:padding="16dp"
-    android:gravity="center_vertical"
-    android:background="@color/primaryColor">
+    android:layout_height="180dp"
+    android:gravity="center"
+    android:background="@color/primaryColor"
+    android:padding="16dp">
 
-    <!-- Profile Circle -->
+    <!-- Profile Image -->
     <ImageView
-        android:id="@+id/ivProfilePic"
-        android:layout_width="60dp"
-        android:layout_height="60dp"
+        android:id="@+id/editProfileIcon"
+        android:layout_width="64dp"
+        android:layout_height="64dp"
         android:src="@drawable/ic_person"
-        android:contentDescription="@string/profile_image"
         android:background="@drawable/profile_circle_bg"
-        android:padding="8dp" />
+        android:padding="8dp"
+        android:scaleType="centerInside"
+        android:contentDescription="Profile picture"
+        android:clickable="true"
+        android:focusable="true"
+        android:foreground="?attr/selectableItemBackgroundBorderless" />
 
-    <!-- Name & Email -->
-    <LinearLayout
-        android:layout_width="0dp"
+
+    <!-- Name -->
+    <TextView
+        android:id="@+id/tvProfileName"
+        android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_weight="1"
-        android:orientation="vertical"
-        android:paddingStart="12dp">
+        android:text="User Name"
+        android:textStyle="bold"
+        android:textSize="18sp"
+        android:textColor="@android:color/white"
+        android:layout_marginTop="8dp" />
 
-        <TextView
-            android:id="@+id/tvDrawerName"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:text="@string/profile_name"
-            android:textColor="@android:color/white"
-            android:textSize="18sp"
-            android:textStyle="bold" />
-
-        <TextView
-            android:id="@+id/tvDrawerEmail"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:text="user@email.com"
-            android:textColor="@android:color/white"
-            android:textSize="14sp" />
-    </LinearLayout>
-
-    <!-- Edit Icon -->
-    <ImageView
-        android:id="@+id/ivEditProfile"
-        android:layout_width="36dp"
-        android:layout_height="36dp"
-        android:src="@drawable/ic_edit"
-        android:contentDescription="@string/edit_profile"
-        android:padding="4dp"
-        app:tint="@android:color/white" />
+    <!-- Email -->
+    <TextView
+        android:id="@+id/tvProfileEmail"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="user@example.com"
+        android:textColor="@android:color/white"
+        android:textSize="14sp"
+        android:layout_marginTop="4dp" />
 
 </LinearLayout>
