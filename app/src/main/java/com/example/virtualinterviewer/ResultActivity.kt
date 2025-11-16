@@ -1,24 +1,31 @@
 package com.example.virtualinterviewer
 
+import android.content.Intent
 import android.graphics.Typeface
 import android.os.Bundle
 import androidx.appcompat.app.AppCompatActivity
 import com.example.virtualinterviewer.data.LongQuestion
 import com.example.virtualinterviewer.data.MCQQuestion
 import com.example.virtualinterviewer.databinding.ActivityResultBinding
+import com.google.firebase.auth.FirebaseAuth
+import com.google.firebase.firestore.FirebaseFirestore
 
 class ResultActivity : AppCompatActivity() {
 
     private lateinit var binding: ActivityResultBinding
+    private lateinit var mAuth: FirebaseAuth
+    private lateinit var db: FirebaseFirestore
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         binding = ActivityResultBinding.inflate(layoutInflater)
         setContentView(binding.root)
 
-        binding.headerTitle.text = "Results"
-        binding.headerSubtitle.text = "Interview summary"
+        // Firebase
+        mAuth = FirebaseAuth.getInstance()
+        db = FirebaseFirestore.getInstance()
 
+        // Get data from intent
         @Suppress("DEPRECATION")
         val introQuestions = intent.getSerializableExtra("intro_questions") as? ArrayList<LongQuestion> ?: arrayListOf()
         @Suppress("DEPRECATION")
@@ -35,39 +42,56 @@ class ResultActivity : AppCompatActivity() {
         val longQuestions = intent.getSerializableExtra("long_questions") as? ArrayList<LongQuestion> ?: arrayListOf()
         @Suppress("DEPRECATION")
         val longAnswers = intent.getSerializableExtra("long_answers") as? ArrayList<String> ?: arrayListOf()
+        val interviewName = intent.getStringExtra("interview_name") ?: "Interview"
 
+        // Calculate scores
         val aptScore = scoreMCQ(aptitudeQuestions, aptitudeSelections)
         val roleScore = scoreMCQ(roleQuestions, roleSelections)
-        val introScoreSum = scoreLongByKeywords(introQuestions, introAnswers) // sum fractions
-        val longScoreSum = scoreLongByKeywords(longQuestions, longAnswers)
+        val introScore = scoreLongByKeywords(introQuestions, introAnswers)
+        val longScore = scoreLongByKeywords(longQuestions, longAnswers)
 
-        val introOutOf5 = introScoreSum.coerceAtMost(5.0)
-        val longOutOf4 = longScoreSum.coerceAtMost(4.0)
+        val introOutOf5 = introScore.coerceAtMost(5.0)
+        val longOutOf4 = longScore.coerceAtMost(4.0)
 
-        val total = (aptScore / 5.0 * 25.0) + (roleScore / 5.0 * 25.0) +
-                (introOutOf5 / 5.0 * 25.0) + (longOutOf4 / 4.0 * 25.0)
+        val totalScore = (aptScore / 5.0 * 25.0) +
+                (roleScore / 5.0 * 25.0) +
+                (introOutOf5 / 5.0 * 25.0) +
+                (longOutOf4 / 4.0 * 25.0)
 
-        binding.tvScore.text = "${"%.1f".format(total)} / 100"
+        // Update UI
+        binding.tvScore.text = "${"%.1f".format(totalScore)} / 100"
         binding.tvScore.typeface = Typeface.DEFAULT_BOLD
         binding.tvApt.text = "Aptitude: $aptScore / 5"
         binding.tvRole.text = "Role MCQ: $roleScore / 5"
         binding.tvIntro.text = "Intro: ${"%.1f".format(introOutOf5)} / 5"
         binding.tvLong.text = "Long answers: ${"%.1f".format(longOutOf4)} / 4"
 
-        val sb = StringBuilder()
-        sb.append("Introduction feedback:\n")
-        sb.append(sectionFeedback(introQuestions, introAnswers))
-        sb.append("\nLong-answer feedback:\n")
-        sb.append(sectionFeedback(longQuestions, longAnswers))
+        // Motivational message
+        binding.tvMessage.text = if (totalScore >= 50) {
+            "🎉 Congratulations! You passed this interview."
+        } else {
+            "💪 Keep trying! You can do better next time."
+        }
 
-        binding.tvFeedback.text = sb.toString()
+        // Save result in Firestore
+        saveScoreToFirestore(interviewName, totalScore)
+
+        // Go to Home button
+        binding.btnHome.setOnClickListener {
+            val intent = Intent(this, HomeActivity::class.java)
+            intent.flags = Intent.FLAG_ACTIVITY_CLEAR_TOP or Intent.FLAG_ACTIVITY_NEW_TASK
+            startActivity(intent)
+            finish()
+        }
     }
 
     private fun scoreMCQ(questions: List<MCQQuestion>, selections: Map<Int, String>): Int {
         var score = 0
-        for ((idx, q) in questions.withIndex()) {
-            val sel = selections[idx]
-            if (sel != null && sel == q.correctAnswer) score++
+        for ((index, q) in questions.withIndex()) {
+            val selected = selections[index]
+            if (selected != null && selected == q.correctAnswer) {
+                score++
+            }
         }
         return score
     }
@@ -85,14 +109,18 @@ class ResultActivity : AppCompatActivity() {
         return sum
     }
 
-    private fun sectionFeedback(questions: List<LongQuestion>, answers: List<String>): String {
-        val sb = StringBuilder()
-        for (i in questions.indices) {
-            val q = questions[i]
-            val ans = answers.getOrNull(i) ?: ""
-            val matched = q.keywords.filter { kw -> ans.contains(kw, ignoreCase = true) }
-            sb.append("Q${i+1}: matched keywords: ${if (matched.isEmpty()) "none" else matched.joinToString(", ")}\n")
-        }
-        return sb.toString()
+    private fun saveScoreToFirestore(interviewName: String, totalScore: Double) {
+        val user = mAuth.currentUser ?: return
+
+        val data = hashMapOf(
+            "interviewName" to interviewName,
+            "score" to totalScore,
+            "timestamp" to System.currentTimeMillis()
+        )
+
+        db.collection("users")
+            .document(user.uid)
+            .collection("interview_history")
+            .add(data)
     }
 }

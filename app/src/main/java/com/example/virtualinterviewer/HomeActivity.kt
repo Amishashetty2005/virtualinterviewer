@@ -18,7 +18,7 @@ class HomeActivity : AppCompatActivity() {
     private lateinit var navigationView: NavigationView
     private lateinit var btnStartInterview: Button
 
-    // Profile section
+    // Profile section (drawer)
     private lateinit var tvDrawerName: TextView
     private lateinit var tvDrawerEmail: TextView
     private lateinit var ivEditProfile: ImageView
@@ -30,13 +30,15 @@ class HomeActivity : AppCompatActivity() {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_home)
 
-        // Initialize Firebase Auth
+        // Firebase
         mAuth = FirebaseAuth.getInstance()
         currentUserEmail = mAuth.currentUser?.email ?: ""
 
-        // Drawer and views
+        // Drawer + Navigation
         drawerLayout = findViewById(R.id.drawer_layout)
         navigationView = findViewById(R.id.navigation_view)
+
+        // ⭐ Correct ID from your XML
         btnStartInterview = findViewById(R.id.btn_start_interview)
 
         // Toolbar setup
@@ -46,37 +48,46 @@ class HomeActivity : AppCompatActivity() {
             drawerLayout.openDrawer(GravityCompat.START)
         }
 
-        // Profile info in drawer header
+        // Drawer Header Views
         val headerView = navigationView.getHeaderView(0)
         tvDrawerName = headerView.findViewById(R.id.tvProfileName)
         tvDrawerEmail = headerView.findViewById(R.id.tvProfileEmail)
         ivEditProfile = headerView.findViewById(R.id.editProfileIcon)
 
-        // Load profile info
         loadProfile()
 
-        // Edit Profile click
+        // Edit Profile
         ivEditProfile.setOnClickListener {
             val intent = Intent(this, EditProfileActivity::class.java)
             intent.putExtra("current_user_email", currentUserEmail)
             startActivity(intent)
         }
 
-        // Start Interview button
+        // ⭐ Start Interview (Working)
         btnStartInterview.setOnClickListener {
-            // TODO: Add your start interview logic here
+            startActivity(Intent(this, InterviewActivity::class.java))
         }
 
-        // Navigation menu item click
-        navigationView.setNavigationItemSelectedListener { menuItem ->
-            when (menuItem.itemId) {
+        // Drawer item clicks
+        navigationView.setNavigationItemSelectedListener { item ->
+            when (item.itemId) {
+
+                R.id.nav_interview -> {
+                    // Same as Start Interview
+                    startActivity(Intent(this, InterviewActivity::class.java))
+                }
+
+                R.id.nav_status -> {
+                    startActivity(Intent(this, StatusActivity::class.java))
+                }
+
                 R.id.nav_logout -> {
                     mAuth.signOut()
                     startActivity(Intent(this, LoginActivity::class.java))
                     finish()
                 }
-                // You can add more items here if needed
             }
+
             drawerLayout.closeDrawer(GravityCompat.START)
             true
         }

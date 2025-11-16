@@ -7,12 +7,12 @@ plugins {
 
 android {
     namespace = "com.example.virtualinterviewer"
-    compileSdk = 35  // ✅ updated
+    compileSdk = 35
 
     defaultConfig {
         applicationId = "com.example.virtualinterviewer"
         minSdk = 24
-        targetSdk = 35  // ✅ updated
+        targetSdk = 35
         versionCode = 1
         versionName = "1.0"
     }
@@ -57,9 +57,11 @@ dependencies {
     implementation("androidx.lifecycle:lifecycle-runtime-ktx:2.8.4")
     implementation("org.jetbrains.kotlinx:kotlinx-coroutines-android:1.7.3")
 
-    // ✅ Firebase
-    implementation("com.google.firebase:firebase-auth:22.3.1")
-    implementation("com.google.firebase:firebase-database:20.3.0")
+    // ✅ Firebase (using BOM to manage versions)
+    implementation(platform("com.google.firebase:firebase-bom:32.2.2"))
+    implementation("com.google.firebase:firebase-auth-ktx")
+    implementation("com.google.firebase:firebase-database-ktx")
+    implementation("com.google.firebase:firebase-firestore-ktx") // if needed
 
     // ✅ Testing
     testImplementation("junit:junit:4.13.2")

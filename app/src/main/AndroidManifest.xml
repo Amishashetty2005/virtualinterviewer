@@ -20,20 +20,24 @@
             </intent-filter>
         </activity>
 
-        <!-- Main dashboard -->
+        <!-- Main Dashboard -->
         <activity android:name=".HomeActivity" android:exported="false" />
 
         <!-- Profile management -->
-        <activity android:name=".SettingsActivity" android:exported="false" />
         <activity android:name=".EditProfileActivity" android:exported="false" />
 
-        <!-- AI Interview flow -->
+        <!-- Interview flow -->
         <activity android:name=".InterviewActivity" android:exported="false" />
         <activity android:name=".IntroductionActivity" android:exported="false" />
         <activity android:name=".AptitudeMCQActivity" android:exported="false" />
         <activity android:name=".RoleMCQActivity" android:exported="false" />
         <activity android:name=".LongAnswerActivity" android:exported="false" />
         <activity android:name=".ResultActivity" android:exported="false" />
+
+        <!-- 👉 You forgot these two (these CAUSED your app crash) -->
+        <activity android:name=".AfterInterviewActivity" android:exported="false" />
+        <activity android:name=".StatusActivity" android:exported="false" />
+
     </application>
 
 </manifest>
